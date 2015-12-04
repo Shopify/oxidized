@@ -10,6 +10,7 @@ describe Oxidized::Node do
     asetus.cfg.hooks.github_repo_hook.username = 'username'
     asetus.cfg.hooks.github_repo_hook.password = 'password'
     GithubRepo.any_instance.stubs(:cfg).returns(asetus.cfg.hooks.github_repo_hook)
+    GithubRepo.any_instance.expects(:fetch_remote).returns(nil)
     Oxidized.stubs(:asetus).returns(asetus)
     repo = mock()
     remote = mock()

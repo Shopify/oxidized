@@ -10,6 +10,12 @@ class GithubRepo < Oxidized::Hook
     remote = repo.remotes['origin'] || repo.remotes.create('origin', cfg.remote_repo)
     log "to remote: #{remote.url}"
 
+    fetch_remote
+
+    remote.push(['refs/heads/master'], credentials: credentials)
+  end
+
+  def fetch_remote
     repo.fetch('origin', [repo.head.name], credentials: credentials)
     merge_index = repo.merge_commits(repo.head.target, repo.branches['origin/master'].target)
     Rugged::Commit.create(repo, {
@@ -19,7 +25,5 @@ class GithubRepo < Oxidized::Hook
       update_ref: repo.head.name
     })
     repo.checkout_head(strategy: :force)
-
-    remote.push(['refs/heads/master'], credentials: credentials)
   end
 end
